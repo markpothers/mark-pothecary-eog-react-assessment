@@ -8,6 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import CardHeader from './CardHeader';
 import InputSelect from './InputSelect';
+import Chart from './Chart';
 // import Avatar from './Avatar';
 
 const useStyles = makeStyles({
@@ -23,6 +24,7 @@ export default () => {
       <CardHeader title="Select any parameter in the dropdown menu to display its recent history on the chart" />
       <CardContent>
         <InputSelect />
+        <Chart />
         <Typography variant="body1">
           We hope the data is useful!
         </Typography>

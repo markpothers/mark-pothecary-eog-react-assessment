@@ -17,14 +17,24 @@ const useStyles = makeStyles({
   },
 });
 
-export default () => {
+export default ({
+  data, options, selectedMetrics, setSelectedMetrics,
+}) => {
   const classes = useStyles();
+
   return (
     <Card className={classes.card}>
       <CardHeader title="Select any parameter in the dropdown menu to display its recent history on the chart" />
       <CardContent>
-        <InputSelect />
-        <Chart />
+        <InputSelect
+          options={options}
+          selectedMetrics={selectedMetrics}
+          setSelectedMetrics={setSelectedMetrics}
+        />
+        <Chart
+          data={data}
+          selectedMetrics={selectedMetrics}
+        />
         <Typography variant="body1">
           We hope the data is useful!
         </Typography>

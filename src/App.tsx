@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
 import NowWhat from './components/NowWhat';
-import ChartCard from './components/ChartCard';
+import WellData from './Features/WellData/WellData';
 
 const theme = createTheme({
   palette: {
@@ -27,7 +27,7 @@ const App = () => (
     <CssBaseline />
     <Wrapper>
       <Header />
-      <ChartCard />
+      <WellData />
       <NowWhat />
       <ToastContainer />
     </Wrapper>

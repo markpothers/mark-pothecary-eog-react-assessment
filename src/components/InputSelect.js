@@ -19,37 +19,24 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
-function getStyles(name, personName, theme) {
+function getStyles(name, selectedMetrics, theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      selectedMetrics.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-export default function MultipleSelectChip() {
+export default function MultipleSelectChip({ options, selectedMetrics, setSelectedMetrics }) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+
+    setSelectedMetrics(
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
@@ -58,12 +45,12 @@ export default function MultipleSelectChip() {
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-chip-label">Data</InputLabel>
+        <InputLabel id="demo-multiple-chip-label">Metrics</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={personName}
+          value={selectedMetrics}
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
@@ -75,9 +62,9 @@ export default function MultipleSelectChip() {
           )}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
-            <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-              {name}
+          {options.map((metric) => (
+            <MenuItem key={metric} value={metric} style={getStyles(metric, selectedMetrics, theme)}>
+              {metric}
             </MenuItem>
           ))}
         </Select>

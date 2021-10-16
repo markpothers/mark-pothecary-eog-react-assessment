@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   ApolloClient,
-  ApolloProvider,
+  // ApolloProvider,
   // useQuery,
   gql,
   InMemoryCache,
@@ -138,10 +138,28 @@ const WellData = () => {
     }
   };
 
+  const onSelectedMetricsChange = async (newSelectedMetrics) => {
+    // if a metric has been added, then get the data for it
+    const missingMetrics = newSelectedMetrics.filter(metric => !selectedMetrics.includes(metric));
+    missingMetrics.forEach(metric => getMeasurementHistory(metric));
+    // if a metric has been removed, remove its data
+    const excessMetrics = selectedMetrics.filter(metric => !newSelectedMetrics.includes(metric));
+    const updatedChartData = measurementHistory.map(timePoint => {
+      excessMetrics.forEach(metric => delete timePoint[metric]);
+      return timePoint;
+    });
+    setMeasurementHistory(updatedChartData);
+    // console.log('selectedMetrics');
+    // console.log(selectedMetrics);
+    // console.log('excess metric');
+    // console.log(excessMetrics);
+    // set the visible metrics
+    setSelectedMetrics(newSelectedMetrics);
+  };
+
   useEffect(() => {
     updateMetrics();
     updateHeartBeat();
-    selectedMetrics.forEach(metric => getMeasurementHistory(metric));
     // const callGetMetrics = (async () => {
     //   const newMetrics = await client.query(metricsQuery);
     // });
@@ -187,13 +205,14 @@ const WellData = () => {
       data={measurementHistory}
       options={metrics}
       selectedMetrics={selectedMetrics}
-      setSelectedMetrics={setSelectedMetrics}
+      // setSelectedMetrics={setSelectedMetrics}
+      onSelectedMetricsChange={onSelectedMetricsChange}
     />
   );
 };
 
 export default () => (
-  <ApolloProvider client={client}>
-    <WellData />
-  </ApolloProvider>
+  // <ApolloProvider client={client}>
+  <WellData />
+  // </ApolloProvider>
 );

@@ -28,7 +28,7 @@ function getStyles(name, selectedMetrics, theme) {
   };
 }
 
-export default function MultipleSelectChip({ options, selectedMetrics, setSelectedMetrics }) {
+export default function MultipleSelectChip({ options, selectedMetrics, onSelectedMetricsChange }) {
   const theme = useTheme();
 
   const handleChange = (event) => {
@@ -36,7 +36,7 @@ export default function MultipleSelectChip({ options, selectedMetrics, setSelect
       target: { value },
     } = event;
 
-    setSelectedMetrics(
+    onSelectedMetricsChange(
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );

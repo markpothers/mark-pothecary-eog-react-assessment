@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 });
 
 export default ({
-  data, options, selectedMetrics, setSelectedMetrics,
+  data, options, selectedMetrics, onSelectedMetricsChange,
 }) => {
   const classes = useStyles();
 
@@ -29,7 +29,7 @@ export default ({
         <InputSelect
           options={options}
           selectedMetrics={selectedMetrics}
-          setSelectedMetrics={setSelectedMetrics}
+          onSelectedMetricsChange={onSelectedMetricsChange}
         />
         <Chart
           data={data}

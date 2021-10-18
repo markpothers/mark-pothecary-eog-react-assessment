@@ -5,9 +5,10 @@ import {
   useQuery,
   InMemoryCache,
 } from '@apollo/client';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { Typography } from '@material-ui/core';
+// import LinearProgress from '@material-ui/core/LinearProgress';
+// import { Typography } from '@material-ui/core';
 // import Chip from '../../components/Chip';
+import { toast } from 'react-toastify';
 import ChartCard from '../../components/ChartCard';
 import {
   metricsQuery,
@@ -56,6 +57,7 @@ const WellData = () => {
       const resultFormattedForChart = result.measurements.map(measurement => ({
         time: measurement.at,
         [metric]: measurement.value,
+        [`${metric}-unit`]: measurement.unit,
       }));
       // go through the new data looking if each timepoint in the newly fetch history
       // is already in the main measurement history
@@ -85,16 +87,13 @@ const WellData = () => {
     return newMeasurementHistory;
   };
 
-  const onSelectedMetricsChange = async (newSelectedMetrics) => {
-    setSelectedMetrics(newSelectedMetrics);
-  };
-
   const addLatestMeasurementToHistory = () => {
     if (data) {
       const newHistoryTimePoint = {};
       Object.keys(data).forEach(metric => {
         newHistoryTimePoint[metric] = data[metric].value;
         newHistoryTimePoint.time = data[metric].at;
+        newHistoryTimePoint[`${metric}-unit`] = data[metric].unit;
       });
       let newMeasurementHistory = [...measurementHistory, newHistoryTimePoint];
       if (newMeasurementHistory.length > 0) {
@@ -104,7 +103,7 @@ const WellData = () => {
           )).length;
           // if there's less than nearly 30 minutes worth of points for this metric,
           //  get the longer history one time
-          if (timePointsForThisMetric < 1450) {
+          if (timePointsForThisMetric < 10) {
             const firstTimePointToIncludeThisMetric = newMeasurementHistory.find(timePoint => (
               Object.keys(timePoint).includes(metric)
             ));
@@ -120,6 +119,10 @@ const WellData = () => {
           }
         });
       }
+      const lastTimePoint = newMeasurementHistory[newMeasurementHistory.length - 1].time;
+      newMeasurementHistory = newMeasurementHistory.filter(timePoint => (
+        timePoint.time > (lastTimePoint - 1800000)
+      ));
       setMeasurementHistory(newMeasurementHistory);
     }
   };
@@ -134,18 +137,21 @@ const WellData = () => {
     addLatestMeasurementToHistory();
   }, [data]);
 
-  if (loading) return <LinearProgress />;
-
-  if (error) return <Typography color="error">{error}</Typography>;
+  // if (error) return <Typography color="error">{error}</Typography>;
 
   // if (!data) return <Chip label="Weather not found" />;
+
+  if (error) {
+    toast.error(error);
+  }
 
   return (
     <ChartCard
       data={measurementHistory}
       options={metrics}
       selectedMetrics={selectedMetrics}
-      onSelectedMetricsChange={onSelectedMetricsChange}
+      setSelectedMetrics={setSelectedMetrics}
+      loading={loading}
     />
   );
 };

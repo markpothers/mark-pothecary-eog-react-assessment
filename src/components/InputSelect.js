@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Input from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -28,7 +28,7 @@ function getStyles(name, selectedMetrics, theme) {
   };
 }
 
-export default function MultipleSelectChip({ options, selectedMetrics, onSelectedMetricsChange }) {
+export default function MultipleSelectChip({ options, selectedMetrics, setSelectedMetrics }) {
   const theme = useTheme();
 
   const handleChange = (event) => {
@@ -36,7 +36,7 @@ export default function MultipleSelectChip({ options, selectedMetrics, onSelecte
       target: { value },
     } = event;
 
-    onSelectedMetricsChange(
+    setSelectedMetrics(
       // On autofill we get a the stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
@@ -52,7 +52,7 @@ export default function MultipleSelectChip({ options, selectedMetrics, onSelecte
           multiple
           value={selectedMetrics}
           onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (

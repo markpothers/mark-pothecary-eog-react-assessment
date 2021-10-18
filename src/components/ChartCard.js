@@ -1,10 +1,11 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 // import List from '@material-ui/core/List';
 // import ListItem from '@material-ui/core/ListItem';
 // import ListItemText from '@material-ui/core/ListItemText';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import CardHeader from './CardHeader';
 import InputSelect from './InputSelect';
@@ -15,10 +16,19 @@ const useStyles = makeStyles({
   card: {
     margin: '5% 10%',
   },
+  // inputSelect: {
+  //   marginLeft: 'auto',
+  // },
+  dataCard: {
+    border: '1px black solid',
+  },
+  inline: {
+    display: 'inline-block',
+  },
 });
 
 export default ({
-  data, options, selectedMetrics, onSelectedMetricsChange,
+  data, options, selectedMetrics, setSelectedMetrics, loading,
 }) => {
   const classes = useStyles();
 
@@ -26,19 +36,27 @@ export default ({
     <Card className={classes.card}>
       <CardHeader title="Select any parameter in the dropdown menu to display its recent history on the chart" />
       <CardContent>
-        <InputSelect
-          options={options}
-          selectedMetrics={selectedMetrics}
-          onSelectedMetricsChange={onSelectedMetricsChange}
-        />
+        <div className={classes.inline}>
+          <InputSelect
+            options={options}
+            selectedMetrics={selectedMetrics}
+            setSelectedMetrics={setSelectedMetrics}
+          />
+          {selectedMetrics.map(metric => (
+            <Card key={metric}>
+              <CardContent>
+                {metric}: {data.length > 0 ? `${data[data.length - 1][metric]} ${data[data.length - 1][`${metric}-unit`]}` : 0}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        {loading && <LinearProgress />}
         <Chart
           data={data}
           selectedMetrics={selectedMetrics}
         />
-        <Typography variant="body1">
-          We hope the data is useful!
-        </Typography>
       </CardContent>
+      <CardHeader title="We hope this data is useful!" />
     </Card>
   );
 };

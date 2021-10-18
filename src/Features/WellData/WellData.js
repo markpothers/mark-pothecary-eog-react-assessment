@@ -5,9 +5,6 @@ import {
   useQuery,
   InMemoryCache,
 } from '@apollo/client';
-// import LinearProgress from '@material-ui/core/LinearProgress';
-// import { Typography } from '@material-ui/core';
-// import Chip from '../../components/Chip';
 import { toast } from 'react-toastify';
 import ChartCard from '../../components/ChartCard';
 import {
@@ -28,7 +25,7 @@ const WellData = () => {
   selectedMetrics.forEach((metric, index) => { latestMeasurementQueryVariables[`metric${index}`] = metric; });
   const { loading, error, data } = useQuery(generateLatestMeasurementQuery(selectedMetrics.length > 0 ? selectedMetrics : ['placeholderMetricName']), {
     variables: latestMeasurementQueryVariables,
-    pollInterval: 1200,
+    pollInterval: 1300,
     skip: selectedMetrics.length === 0,
   });
 
@@ -96,6 +93,8 @@ const WellData = () => {
         newHistoryTimePoint[`${metric}-unit`] = data[metric].unit;
       });
       let newMeasurementHistory = [...measurementHistory, newHistoryTimePoint];
+      // if there's at least one timepoint in the history then check
+      // if we need to download the last 30 minutes worth of data
       if (newMeasurementHistory.length > 0) {
         selectedMetrics.forEach(async (metric) => {
           const timePointsForThisMetric = newMeasurementHistory.filter(timePoint => (
@@ -103,7 +102,7 @@ const WellData = () => {
           )).length;
           // if there's less than nearly 30 minutes worth of points for this metric,
           //  get the longer history one time
-          if (timePointsForThisMetric < 10) {
+          if (timePointsForThisMetric < 1300) {
             const firstTimePointToIncludeThisMetric = newMeasurementHistory.find(timePoint => (
               Object.keys(timePoint).includes(metric)
             ));
@@ -136,10 +135,6 @@ const WellData = () => {
   useEffect(() => {
     addLatestMeasurementToHistory();
   }, [data]);
-
-  // if (error) return <Typography color="error">{error}</Typography>;
-
-  // if (!data) return <Chip label="Weather not found" />;
 
   if (error) {
     toast.error(error);

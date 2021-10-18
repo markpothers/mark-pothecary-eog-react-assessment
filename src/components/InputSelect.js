@@ -43,32 +43,30 @@ export default function MultipleSelectChip({ options, selectedMetrics, setSelect
   };
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-chip-label">Metrics</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={selectedMetrics}
-          onChange={handleChange}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {options.map((metric) => (
-            <MenuItem key={metric} value={metric} style={getStyles(metric, selectedMetrics, theme)}>
-              {metric}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl style={{ minWidth: 500, marginBottom: 20 }} sx={{ m: 1, width: 300 }}>
+      <InputLabel id="demo-multiple-chip-label">Select parameters:</InputLabel>
+      <Select
+        labelId="demo-multiple-chip-label"
+        id="demo-multiple-chip"
+        multiple
+        value={selectedMetrics}
+        onChange={handleChange}
+        input={<Input id="select-multiple-chip" />}
+        renderValue={(selected) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selected.map((value) => (
+              <Chip key={value} label={value} />
+            ))}
+          </Box>
+        )}
+        MenuProps={MenuProps}
+      >
+        {options.map((metric) => (
+          <MenuItem key={metric} value={metric} style={getStyles(metric, selectedMetrics, theme)}>
+            {metric}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }

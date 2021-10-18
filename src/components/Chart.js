@@ -21,12 +21,8 @@ const CustomizedTick = ({
   x, y, payload, lastTimePoint,
 }) => {
   const formatTime = tick => {
-    // if (data.length > 0) {
-    // const now = data[data.length - 1].time;
     const ago = lastTimePoint - tick;
-    return (ago / (1000 * 60)).toFixed(2);
-    // }
-    // return 0;
+    return -(ago / (1000 * 60)).toFixed(2);
   };
 
   return (
@@ -39,7 +35,7 @@ const CustomizedTick = ({
 };
 
 export default ({ data, selectedMetrics }) => {
-  const chartWidth = window.innerWidth * 0.79;
+  const chartWidth = window.innerWidth * 0.76;
 
   const getUnit = (metric) => {
     if (data.length > 0 && Object.keys(data[data.length - 1]).includes(metric)) {
@@ -52,7 +48,7 @@ export default ({ data, selectedMetrics }) => {
     if (data.length > 0) {
       const now = data[data.length - 1].time;
       const ago = now - time;
-      return `${(ago / (1000 * 60)).toFixed(2)} minutes ago`;
+      return `T - ${(ago / (1000 * 60)).toFixed(2)} min`;
     }
     return 0;
   };
@@ -60,7 +56,7 @@ export default ({ data, selectedMetrics }) => {
   return (
     <LineChart
       width={chartWidth}
-      height={400}
+      height={500}
       data={data}
       margin={
         {
@@ -78,6 +74,7 @@ export default ({ data, selectedMetrics }) => {
           yAxisId={metric}
           stroke={colors[i % 5]}
           key={metric}
+          dot={false}
         />
       ))}
       {selectedMetrics.map(metric => (
@@ -86,12 +83,13 @@ export default ({ data, selectedMetrics }) => {
           yAxisId={metric}
           key={metric}
           label={{ value: `${metric} (${getUnit(metric)})`, angle: -90, position: 'insideLeft' }}
+          padding={{ top: 10, bottom: 10 }}
         />
       ))}
       <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
       <XAxis
         dataKey="time"
-        label="Time (minutes ago)"
+        label="Time (min)"
         angle={-45}
         padding={{ left: 10, right: 10 }}
         tick={<CustomizedTick lastTimePoint={data.length > 0 ? data[data.length - 1].time : 0} />}

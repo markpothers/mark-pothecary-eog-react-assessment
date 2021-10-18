@@ -75,6 +75,7 @@ export default ({ data, selectedMetrics }) => {
           stroke={colors[i % 5]}
           key={metric}
           dot={false}
+          isAnimationActive={false}
         />
       ))}
       {selectedMetrics.map(metric => (
